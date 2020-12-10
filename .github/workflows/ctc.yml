@@ -75,7 +75,6 @@ jobs:
       working-directory: ./openwrt
       run: |
         git clone https://github.com/kenzok8/litte package/litte
-        git clone https://github.com/xiaorouji/openwrt-passwall package/openwrt-passwall
 
     - name: 自定义配置ctc文件
       env:
@@ -83,11 +82,10 @@ jobs:
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && rm -rf package/litte/luci-app-passwall && rm -rf package/litte/luci-app-jd-dailybonus
-        rm -rf package/litte/luci-app-ssr-plus && rm -rf package/litte/luci-app-clash && rm -rf package/litte/naiveproxy
+        cd openwrt && rm -rf package/litte/luci-app-passwall && rm -rf package/litte/luci-app-ssr-plus
         rm -rf package/litte/microsocks && rm -rf package/litte/redsocks2 && rm -rf package/litte/tcping
-        rm -rf package/litte/AdGuardHome && rm -rf package/litte/luci-app-adguardhome
-        rm -rf package/litte/luci-app-advancedsetting && rm -rf package/litte/luci-app-aliddns
+        rm -rf package/litte/AdGuardHome && rm -rf package/litte/luci-app-adguardhome && rm -rf package/litte/luci-app-jd-dailybonus && rm -rf package/litte/naiveproxy
+        rm -rf package/litte/luci-app-advancedsetting && rm -rf package/litte/luci-app-aliddns && rm -rf package/litte/luci-app-clash
         rm -rf package/litte/gost && rm -rf package/litte/luci-app-gost && rm -rf package/litte/luci-app-eqos
         rm -rf package/litte/luci-app-openclash && rm -rf package/litte/luci-app-smartdns && rm -rf package/litte/smartdns
         rm -rf package/ctcgfw/luci-theme-atmaterial && rm -rf package/ctcgfw/luci-theme-opentomato && rm -rf package/ctcgfw/luci-theme-opentomcat
