@@ -1,10 +1,10 @@
-#=================================================
+﻿#=================================================
 # Description: Build OpenWrt using GitHub Actions
 # Lisence: MIT
 # Author: kenzo
 #=================================================
 
-name: ctc_x86_64
+name: ctc_4.19内核
 
 on: 
   release:
@@ -60,6 +60,7 @@ jobs:
       env: 
         REPO_URL: https://github.com/immortalwrt/immortalwrt
         REPO_BRANCH: openwrt-18.06
+        
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
@@ -74,7 +75,7 @@ jobs:
     - name: 自定义安装源
       working-directory: ./openwrt
       run: |
-        git clone https://github.com/kenzok8/litte package/litte
+        git clone https://github.com/kenzok78/jeii package/jeii
 
     - name: 自定义配置ctc文件
       env:
@@ -82,20 +83,12 @@ jobs:
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && rm -rf package/lienol/luci-app-passwall && rm -rf package/lean/luci-app-ssr-plus
-        rm -rf package/litte/microsocks && rm -rf package/litte/redsocks2 && rm -rf package/litte/tcpping
-        rm -rf package/ntlf9t/AdGuardHome && rm -rf package/ctcgfw/luci-app-adguardhome && rm -rf package/lean/v2ray
-        rm -rf package/litte/luci-app-advancedsetting && rm -rf package/litte/luci-app-aliddns && rm -rf package/litte/luci-app-clash
-        rm -rf package/litte/gost && rm -rf package/litte/luci-app-gost && rm -rf package/litte/luci-app-eqos
-        rm -rf package/ctcgfw/luci-app-openclash && rm -rf package/litte/luci-app-smartdns && rm -rf package/litte/smartdns
-        rm -rf package/ctcgfw/luci-theme-atmaterial && rm -rf package/ctcgfw/luci-theme-opentomato && rm -rf package/ctcgfw/luci-theme-mcat
-        cp -f package/litte/default-settings package/lean/default-settings/files/zzz-default-settings
-        cp -f package/litte/banner package/base-files/files/etc/banner
-        cp -f package/litte/ctcdiffconfig .config && make defconfig
-        cp -f package/litte/ctcdiffconfig .config && make defconfig
+        cd openwrt
+        cp -f package/jeii/banner package/base-files/files/etc/banner
+        cp -f package/jeii/ctcdiffconfig .config && make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        ./scripts/feeds install -a  
+        ./scripts/feeds install -a
         
     - name: 下载包文件
       working-directory: ./openwrt
@@ -110,8 +103,10 @@ jobs:
         echo -e "$(nproc) thread build."
         make -j$(nproc) V=s
 
-    - name : 上传固件与目录
+
+    - name : 上传固件
       uses: actions/upload-artifact@master
       with:
-        name: ctc_openwrt
+        name: ctc_4.19
         path: openwrt/bin
+        
