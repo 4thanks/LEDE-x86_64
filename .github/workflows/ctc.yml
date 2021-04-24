@@ -1,4 +1,4 @@
-﻿#=================================================
+#=================================================
 # Description: Build OpenWrt using GitHub Actions
 # Lisence: MIT
 # Author: kenzo
@@ -75,7 +75,7 @@ jobs:
     - name: 自定义安装源
       working-directory: ./openwrt
       run: |
-        git clone https://github.com/kenzok78/jeii package/jeii
+        git clone https://github.com/kenzok78/jeii  package/jeii
 
     - name: 自定义配置ctc文件
       env:
@@ -109,4 +109,3 @@ jobs:
       with:
         name: ctc_4.19
         path: openwrt/bin
-        
