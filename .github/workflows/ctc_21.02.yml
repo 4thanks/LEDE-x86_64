@@ -17,8 +17,8 @@ on:
   schedule:
     - cron: 0 */48 * * *
   
-#  watch:
-#    types: started
+  watch:
+    types: started
     
     
 env:
@@ -33,7 +33,7 @@ jobs:
     runs-on: Ubuntu-20.04
     steps:
     - name: 检查
-      uses: actions/checkout@master
+      uses: actions/checkout@main
 
     - name: 初始化环境
       env:
@@ -71,7 +71,7 @@ jobs:
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
+        sed -i '5s/#//' feeds.conf.default
         
     - name: 更新 & 安装 feeds
       working-directory: ./openwrt
@@ -82,20 +82,20 @@ jobs:
     - name: 自定义安装源
       working-directory: ./openwrt
       run: |
-        git clone https://github.com/kenzok8/litte package/litte     
-
-    - name: 自定义配置文件Lean
+        git clone https://github.com/kenzok78/jeii package/jeii     
+        
+    - name: 自定义配置文件
       env:
         CONFIG_FILE: '21diffconfig'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
         cd openwrt
-        cp -f package/litte/commit/default-settings package/lean/default-settings/files/zzz-default-settings
-        cp -f package/litte/commit/banner package/base-files/files/etc/banner
-        cp -f package/litte/commit/21diffconfig .config && make defconfig
+        cp -f package/jeii/commit/default-settings package/lean/default-settings/files/zzz-default-settings
+        cp -f package/jeii/commit/banner package/base-files/files/etc/banner
+        cp -f package/jeii/commit/21diffconfig .config && make defconfig
+        cp -f package/jeii/commit/10_system.js feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
         ./scripts/feeds update -a
-        ./scripts/feeds install -a
         ./scripts/feeds install -a
         
     - name: 下载包文件
@@ -113,7 +113,7 @@ jobs:
        
 
     - name : 上传固件
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       with:
         name: ctc_21.02
         path: openwrt/bin
@@ -134,7 +134,7 @@ jobs:
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
-        retain_days: 3
+        retain_days: 2
         keep_minimum_runs: 0
 
     - name: Remove old Releases
