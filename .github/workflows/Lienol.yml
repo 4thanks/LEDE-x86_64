@@ -64,7 +64,7 @@ jobs:
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        sed -i '5s/#//' feeds.conf.default
+                sed -i '5s/#//' feeds.conf.default
         
     - name: 更新 & 安装 feeds
       working-directory: ./openwrt
@@ -103,8 +103,8 @@ jobs:
     - name: 编译固件
       working-directory: ./openwrt
       run: |
-        echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s       
+        echo -e "$(($(nproc)+1)) thread compile"
+        make -j$(($(nproc)+1)) || make -j1 V=s      
 
     - name : 上传固件
       uses: actions/upload-artifact@main
